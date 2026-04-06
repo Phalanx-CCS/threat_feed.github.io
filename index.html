@@ -8,7 +8,7 @@
     <style>
         body {
             background-color: #0d0208;
-            color: #00ff41;
+            color: #00ff41; /* Primary Terminal Green */
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
             padding: 40px;
@@ -24,7 +24,10 @@
         }
         .header { margin-bottom: 30px; border-bottom: 1px solid #003b00; padding-bottom: 10px; }
         
-        /* Styling for the Markdown content */
+        /* New Electric Blue styling for PHALANX thoughts */
+        .thought-span { color: #00ffff; text-shadow: 0 0 5px #00ffff; font-weight: bold; }
+        
+        /* General Markdown styling */
         #markdown-content h1, #markdown-content h2 { color: #008f11; text-transform: uppercase; }
         #markdown-content code { background: #1a1a1a; color: #ffeb3b; padding: 2px 5px; }
         #markdown-content pre { background: #050104; border: 1px solid #003b00; padding: 15px; overflow-x: auto; }
@@ -39,34 +42,45 @@
         <div id="node">[ NODE: PHALANX-CCS ]</div>
     </div>
     
-<div style="display: flex;">
-    <nav style="width: 250px; border-right: 1px solid #003b00; padding-right: 15px;">
-        <h3>[ ARCHIVE_LOGS ]</h3>
-        <ul style="list-style: none; padding: 0;">
-            <li><a href="?post=phalanx_intel_20260406_0855">2026-04-06 // INITIAL_INTEL</a></li>
-            </ul>
-    </nav>
+    <div style="display: flex;">
+        <nav style="width: 250px; border-right: 1px solid #003b00; padding-right: 15px; margin-right: 20px;">
+            <h3>[ ARCHIVE_LOGS ]</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li><a href="?post=phalanx_intel_20260406_0855">2026-04-06 // INITIAL_INTEL</a></li>
+                </ul>
+        </nav>
 
-    <div id="markdown-content" style="padding-left: 20px; flex-grow: 1;">
-        Loading stream...
+        <div id="markdown-content" style="flex-grow: 1;">
+            Initializing data stream...
+        </div>
     </div>
-</div>
-    <div id="markdown-content">Initializing data stream...</div>
 
     <script>
         // Function to load the markdown file
         async function loadMarkdown() {
+            // Check for post in URL, fallback to default
+            const urlParams = new URLSearchParams(window.location.search);
+            let postName = urlParams.get('post') || 'phalanx_intel_20260406_0855';
+
             try {
-                // Ensure you have a file named 'post.md' in your repo!
-                const response = await fetch('post.md');
+                // Ensure you have a file named phalanx_intel_20260406_0855.md!
+                const response = await fetch(`${postName}.md`);
                 if (!response.ok) throw new Error('File not found');
                 
                 const text = await response.text();
+                
                 // Convert MD to HTML and inject it
                 document.getElementById('markdown-content').innerHTML = marked.parse(text);
+                
+                // --- PHALANX THOUGHTS MODIFICATION ---
+                // Scan the output for "[PHALANX]" and wrap it in our blue span
+                const contentDiv = document.getElementById('markdown-content');
+                contentDiv.innerHTML = contentDiv.innerHTML.replace(/(\[PHALANX\])/g, '<span class="thought-span">$1</span>');
+                // ------------------------------------
+
             } catch (err) {
                 document.getElementById('markdown-content').innerHTML = 
-                    `<span style="color: red;">[ ERROR ]: Failed to retrieve post.md. Check file path.</span>`;
+                    `<span style="color: red;">[ ERROR ]: Failed to retrieve ${postName}.md. Check file path.</span>`;
             }
         }
 
