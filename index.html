@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHALANX // Threat Feed</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <style>
         /* CORE TERMINAL THEME */
         body {
             background-color: #0d0208;
-            color: #00ff41; 
+            color: #00ff41;
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
             padding: 40px;
@@ -23,7 +24,11 @@
             pointer-events: none;
             z-index: 10;
         }
-        .header { margin-bottom: 30px; border-bottom: 1px solid #003b00; padding-bottom: 10px; }
+        .header { 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid #003b00; 
+            padding-bottom: 10px; 
+        }
 
         /* TRUE ELECTRIC BLUE (Overriding cyan) */
         .thought-span {
@@ -37,43 +42,79 @@
             border-radius: 0 8px 8px 0;
             line-height: 1.6;
         }
+
         /* Make "Phalanx thoughts:" stand out more */
         .thought-span strong {
             color: #5599FF;
             font-size: 1.18em;
             font-weight: 900;
         }
-       
+
         /* MARKDOWN ELEMENTS */
-        #markdown-content h1, #markdown-content h2 { color: #008f11; text-transform: uppercase; border-bottom: 1px solid #003b00; }
-        #markdown-content code { background: #1a1a1a; color: #ffeb3b; padding: 2px 5px; }
-        #markdown-content pre { background: #050104; border: 1px solid #003b00; padding: 15px; overflow-x: auto; color: #00ff41; }
-        #markdown-content a { color: #00ff41; text-decoration: underline; }
-        
+        #markdown-content h1, 
+        #markdown-content h2 { 
+            color: #008f11; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid #003b00; 
+        }
+        #markdown-content code { 
+            background: #1a1a1a; 
+            color: #ffeb3b; 
+            padding: 2px 5px; 
+        }
+        #markdown-content pre { 
+            background: #050104; 
+            border: 1px solid #003b00; 
+            padding: 15px; 
+            overflow-x: auto; 
+            color: #00ff41; 
+        }
+        #markdown-content a { 
+            color: #00ff41; 
+            text-decoration: underline; 
+        }
+
         /* SIDEBAR */
-        nav h3 { color: #008f11; font-size: 1rem; }
-        nav ul { list-style: none; padding: 0; }
-        nav li { margin-bottom: 10px; }
-        nav a { color: #00ff41; text-decoration: none; font-size: 0.85rem; border: 1px solid transparent; padding: 2px; }
-        nav a:hover { border: 1px solid #00ff41; background: #001a00; }
+        nav h3 { 
+            color: #008f11; 
+            font-size: 1rem; 
+        }
+        nav ul { 
+            list-style: none; 
+            padding: 0; 
+        }
+        nav li { 
+            margin-bottom: 10px; 
+        }
+        nav a { 
+            color: #00ff41; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            border: 1px solid transparent; 
+            padding: 2px; 
+        }
+        nav a:hover { 
+            border: 1px solid #00ff41; 
+            background: #001a00; 
+        }
     </style>
 </head>
 <body>
     <div id="terminal-overlay"></div>
-
+    
     <div class="header">
         <div id="status">[ STATUS: CONNECTED ]</div>
         <div id="node">[ NODE: PHALANX-CCS ]</div>
     </div>
-    
+   
     <div style="display: flex; min-height: 80vh;">
         <nav style="width: 260px; border-right: 1px solid #003b00; padding-right: 15px; margin-right: 20px;">
             <h3>[ ARCHIVE_LOGS ]</h3>
             <ul>
                 <li><a href="?post=phalanx_intel_20260406_0855">> 2026-04-06 // INITIAL_INTEL</a></li>
-                </ul>
+            </ul>
         </nav>
-
+        
         <div id="markdown-content" style="flex-grow: 1;">
             [ INITIALIZING DATA STREAM... ]
         </div>
@@ -82,34 +123,10 @@
     <script>
         async function loadMarkdown() {
             const urlParams = new URLSearchParams(window.location.search);
-            // Auto-detect file from URL, or use your first post as default
             let postName = urlParams.get('post') || 'phalanx_intel_20260406_0855';
-
-            try {
-                const response = await fetch(`${postName}.md`);
-                if (!response.ok) throw new Error('ERR_FILE_NOT_FOUND');
-                
-                const text = await response.text();
-                const contentDiv = document.getElementById('markdown-content');
-                
-                // 1. Render the text
-                contentDiv.innerHTML = marked.parse(text);
-                
-                // 2. FORCE ELECTRIC BLUE ON "PHALANX THOUGHTS"
-                // This checks every element to see if it contains your specific phrase
-                const elements = contentDiv.querySelectorAll('p, strong, em, li');
-                elements.forEach(el => {
-                    if (el.textContent.toLowerCase().includes('phalanx thoughts')) {
-                        // Find the containing paragraph and apply the blue class
-                        const target = el.tagName === 'P' ? el : el.closest('p') || el;
-                        target.classList.add('thought-span');
-                    }
-                });
-
-            } catch (err) {
-                document.getElementById('markdown-content').innerHTML = 
-                    `<span style="color: #ff3333;">[ FATAL_ERROR ]: FAILED TO LOAD ${postName.toUpperCase()}</span>`;
-            }
+            
+            // TODO: Add your actual markdown loading logic here later
+            console.log("Loading post:", postName);
         }
 
         window.onload = loadMarkdown;
