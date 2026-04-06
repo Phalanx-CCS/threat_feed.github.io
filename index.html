@@ -4,51 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PHALANX // Threat Feed</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* This part fixes the white background */
         body {
-            background-color: #0d0208; /* Deep black/green tint */
-            color: #00ff41;             /* Matrix Green */
+            background-color: #0d0208;
+            color: #00ff41;
             font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             margin: 0;
-            overflow: hidden;
+            padding: 40px;
+            line-height: 1.5;
         }
-
-        .typing-effect {
-            width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: .15em solid #00ff41;
-            font-size: 1.2rem;
-            animation: typing 3.5s steps(40, end) forwards, blink-caret .75s step-end infinite;
-        }
-
-        @keyframes typing { from { width: 0 } to { width: 100% } }
-        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: #00ff41; } }
-
-        /* Scanning line effect for extra "hacker" vibes */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
+        #terminal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
             pointer-events: none;
+            z-index: 10;
         }
+        .header { margin-bottom: 30px; border-bottom: 1px solid #003b00; padding-bottom: 10px; }
+        
+        /* Styling for the Markdown content */
+        #markdown-content h1, #markdown-content h2 { color: #008f11; text-transform: uppercase; }
+        #markdown-content code { background: #1a1a1a; color: #ffeb3b; padding: 2px 5px; }
+        #markdown-content pre { background: #050104; border: 1px solid #003b00; padding: 15px; overflow-x: auto; }
+        #markdown-content a { color: #00ff41; text-decoration: underline; }
     </style>
 </head>
 <body>
+    <div id="terminal-overlay"></div>
 
-    <div class="typing-effect">
-        [PHALANX] >> Aggregated Intelligence. Building the wall between the node and the noise.
+    <div class="header">
+        <div id="status">[ STATUS: CONNECTED ]</div>
+        <div id="node">[ NODE: PHALANX-CCS ]</div>
     </div>
 
+    <div id="markdown-content">Initializing data stream...</div>
+
+    <script>
+        // Function to load the markdown file
+        async function loadMarkdown() {
+            try {
+                // Ensure you have a file named 'post.md' in your repo!
+                const response = await fetch('post.md');
+                if (!response.ok) throw new Error('File not found');
+                
+                const text = await response.text();
+                // Convert MD to HTML and inject it
+                document.getElementById('markdown-content').innerHTML = marked.parse(text);
+            } catch (err) {
+                document.getElementById('markdown-content').innerHTML = 
+                    `<span style="color: red;">[ ERROR ]: Failed to retrieve post.md. Check file path.</span>`;
+            }
+        }
+
+        loadMarkdown();
+    </script>
 </body>
 </html>
