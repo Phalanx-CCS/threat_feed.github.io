@@ -58,33 +58,37 @@
     <script>
         // Function to load the markdown file
         async function loadMarkdown() {
-            // Check for post in URL, fallback to default
             const urlParams = new URLSearchParams(window.location.search);
+            // Default to your new filename format
             let postName = urlParams.get('post') || 'phalanx_intel_20260406_0855';
 
             try {
-                // Ensure you have a file named phalanx_intel_20260406_0855.md!
                 const response = await fetch(`${postName}.md`);
                 if (!response.ok) throw new Error('File not found');
                 
                 const text = await response.text();
-                
-                // Convert MD to HTML and inject it
-                document.getElementById('markdown-content').innerHTML = marked.parse(text);
-                
-                // --- PHALANX THOUGHTS MODIFICATION ---
-                // Scan the output for "[PHALANX]" and wrap it in our blue span
                 const contentDiv = document.getElementById('markdown-content');
-                contentDiv.innerHTML = contentDiv.innerHTML.replace(/(\[PHALANX\])/g, '<span class="thought-span">$1</span>');
-                // ------------------------------------
+                
+                // 1. Render the Markdown first
+                contentDiv.innerHTML = marked.parse(text);
+                
+                // 2. ELECTRIC BLUE LOGIC
+                // This looks for any paragraph starting with "Phalanx thoughts" 
+                // and wraps it in the blue span.
+                const paragraphs = contentDiv.getElementsByTagName('p');
+                for (let p of paragraphs) {
+                    if (p.innerText.toLowerCase().includes('phalanx thoughts')) {
+                        p.classList.add('thought-span');
+                    }
+                }
 
             } catch (err) {
                 document.getElementById('markdown-content').innerHTML = 
-                    `<span style="color: red;">[ ERROR ]: Failed to retrieve ${postName}.md. Check file path.</span>`;
+                    `<span style="color: red;">[ ERROR ]: Failed to retrieve ${postName}.md</span>`;
             }
         }
 
         loadMarkdown();
-    </script>
+       </script>
 </body>
 </html>
