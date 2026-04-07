@@ -306,8 +306,8 @@
     <script>
         // CONFIGURATION: Update these to match your GitHub repository
         const CONFIG = {
-            owner: 'Phalanx-CCS', // e.g., 'johndoe'
-            repo: 'threat_feed.github.io',       // e.g., 'phalanx-feed'
+            owner: 'YOUR_GITHUB_USERNAME', // e.g., 'johndoe'
+            repo: 'YOUR_REPO_NAME',       // e.g., 'phalanx-feed'
             branch: 'main'
         };
 
@@ -396,8 +396,9 @@
                 let html = marked.parse(text);
 
                 // Apply Phalanx thoughts styling
-                html = html.replace(/<p><strong>Phalanx thoughts:<\/strong>(.*?)<\/p>/g, 
-                    '<div class="phalanx-callout"><strong>Phalanx thoughts:</strong>$1</div>');
+                // This regex is robust: handles bold/plain text, case-insensitivity, and variations like "Phalanx Thoughts on [Topic]"
+                html = html.replace(/<p>(?:<strong>)?Phalanx\s+Thoughts(?:\s+on\s+[^:]+)?:\s*(?:<\/strong>)?(.*?)(?:<\/p>)/gi, 
+                    '<div class="phalanx-callout"><strong>Phalanx Thoughts:</strong> $1</div>');
 
                 contentDiv.innerHTML = html;
                 
